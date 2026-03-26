@@ -110,6 +110,12 @@ h1 .dim{
   background:linear-gradient(135deg, #555555 0%, #888888 50%, #444444 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
+/* Typewriter sits outside .dim so needs its own gradient */
+#typewriter{
+  background:linear-gradient(135deg, #555555 0%, #888888 50%, #444444 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:inline;
+}
 
 .hero-desc{
   font-size:16px;line-height:1.7;color:var(--text2);
@@ -280,17 +286,71 @@ footer p{font-family:var(--mono);font-size:13px;color:var(--text2);letter-spacin
   nav{padding:0 24px}
   .nav-links{display:none}
   .wrap{padding:0 24px}
-  .hero-wrap{grid-template-columns:1fr;gap:40px;padding:0 24px}
+  section{padding:72px 0}
+  .hero-wrap{grid-template-columns:1fr;gap:32px;padding:0 24px}
   .hero-photo-col{order:-1}
   .hero-photo-frame{aspect-ratio:4/3;max-height:280px}
-  h1{font-size:clamp(42px,10vw,64px)}
-  .hero-meta{gap:24px}
-  .about-grid,.contact-grid{grid-template-columns:1fr}
-  .skills-grid{grid-template-columns:1fr}
+  .hero-photo-frame img{object-position:center 5%}
+  h1{font-size:clamp(38px,9vw,60px)}
+  .hero-meta{gap:20px}
+  .hero-desc{max-width:100%}
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .contact-grid{grid-template-columns:1fr}
+  .skills-grid{grid-template-columns:1fr 1fr}
   .project-main{grid-template-columns:1fr}
   .pm-right{display:none}
+  .wip-row{grid-template-columns:1fr 1fr}
+  .recent-repos{grid-template-columns:1fr 1fr}
+  footer{flex-direction:column;gap:12px;text-align:center}
+}
+@media(max-width:540px){
+  nav{padding:0 16px;height:52px}
+  .wrap{padding:0 16px}
+  section{padding:56px 0}
+  .hero-wrap{padding:0 16px;gap:20px}
+  .hero-photo-frame{aspect-ratio:4/3;max-height:240px}
+  .hero-photo-frame img{object-position:center 5%}
+  h1{font-size:clamp(32px,10vw,48px);line-height:1.0}
+  .hero-tag{font-size:11px;margin-bottom:20px}
+  .hero-desc{font-size:14px;margin-bottom:16px}
+  .hero-actions{gap:8px;margin-bottom:32px}
+  .btn{font-size:12px;padding:8px 12px}
+  .hero-meta{gap:16px;padding-top:18px}
+  .meta-num{font-size:17px}
+  .meta-lbl{font-size:9px}
+  .section-label{font-size:10px;margin-bottom:28px}
+  .about-text p{font-size:14px}
+  .ali{padding:12px 16px}
+  .ali-k{font-size:10px}
+  .ali-v{font-size:12px}
+  .skills-grid{grid-template-columns:1fr}
+  .skill-col{padding:24px 20px}
+  .tag{font-size:11.5px;padding:4px 9px}
+  .pm-left{padding:28px 24px}
+  .p-title{font-size:20px}
+  .p-desc{font-size:13px}
   .wip-row{grid-template-columns:1fr}
-  footer{flex-direction:column;gap:8px;text-align:center}
+  .wip-card{padding:22px 20px}
+  .activity-card{padding:24px 20px}
+  .activity-header{flex-direction:column;gap:8px;margin-bottom:16px}
+  .contrib-cell{width:7px;height:7px;border-radius:1px}
+  .contrib-grid{gap:2px}
+  .recent-repos{grid-template-columns:1fr}
+  .repo-card{padding:16px 18px}
+  .contact-grid{gap:10px}
+  .contact-card{padding:28px 22px}
+  .cc-title{font-size:18px}
+  .cc-body{font-size:13px;margin-bottom:20px}
+  .cc-email{font-size:14px}
+  .cc-cta{font-size:13px;padding:9px 16px}
+  footer{padding:36px 0;gap:10px}
+  footer p,.gh-link{font-size:11px}
+}
+/* Disable custom cursor on touch devices */
+@media(hover:none),(pointer:coarse){
+  body{cursor:auto}
+  .btn,.cc-cta,a,button{cursor:pointer}
+  #c,#cr{display:none!important}
 }
 </style>
 <!-- JSON-LD Structured Data -->
@@ -337,7 +397,7 @@ footer p{font-family:var(--mono);font-size:13px;color:var(--text2);letter-spacin
     <!-- Left: text -->
     <div class="hero-left">
       <div class="hero-tag"><span></span>Available for new projects</div>
-      <h1>Full-Stack<br><span class="dim" id="typewriter"></span></h1>
+      <h1>Full-Stack<br><span class="dim"><span id="typewriter"></span></span></h1>
       <p class="hero-desc">I turn ideas into shipped products — clean code, thoughtful design, zero excuses. Based in Kosovo, building for the world.</p>
       <div class="hero-philosophy" style="display:flex;align-items:center;gap:0;margin-bottom:40px;opacity:0;animation:up .7s .38s forwards;">
         <span class="hp-item">build<span class="hp-parens">()</span></span>
@@ -552,17 +612,23 @@ footer p{font-family:var(--mono);font-size:13px;color:var(--text2);letter-spacin
   </a>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const c=document.getElementById('c'),cr=document.getElementById('cr');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.opacity=1;cr.style.opacity=1;c.style.left=mx+'px';c.style.top=my+'px'});
-(function t(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(t)})();
+let mx=0,my=0,rx=0,ry=0,rafStarted=false;
+// Keep cursor hidden until mouse actually moves
+c.style.opacity=0;cr.style.opacity=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  c.style.left=mx+'px';c.style.top=my+'px';
+  c.style.opacity=1;cr.style.opacity=1;
+  if(!rafStarted){rafStarted=true;rx=mx;ry=my;(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();}
+});
 document.querySelectorAll('a,button,.tag,.ali,.wip-card,.skill-col').forEach(el=>{
   el.addEventListener('mouseenter',()=>{c.classList.add('h');cr.classList.add('h')});
   el.addEventListener('mouseleave',()=>{c.classList.remove('h');cr.classList.remove('h')});
 });
 document.addEventListener('mouseleave',()=>{c.style.opacity=0;cr.style.opacity=0});
-document.addEventListener('mouseenter',()=>{c.style.opacity=1;cr.style.opacity=1});
+document.addEventListener('mouseenter',()=>{if(rafStarted){c.style.opacity=1;cr.style.opacity=1}});
 
 // ── Typewriter ──
 (function(){
@@ -687,15 +753,15 @@ if (cvBtn) {
   }
 }
 
-// ── Scroll reveal ──
-const ro = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');ro.unobserve(e.target)}});
-},{threshold:.12});
-document.querySelectorAll('.r').forEach(el=>ro.observe(el));
+// ── Scroll Reveal ──
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');revealObs.unobserve(e.target);}});
+},{threshold:0.08});
+document.querySelectorAll('.r').forEach(el=>revealObs.observe(el));
 
 // ── Nav scroll ──
-const nav=document.querySelector('nav');
-window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>20)},{passive:true});
+const navEl=document.getElementById('nav');
+window.addEventListener('scroll',()=>{navEl.classList.toggle('scrolled',window.scrollY>20);},{passive:true});
 </script>
 </body>
 </html>
